@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- <link href="/public/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <title>GTS Attendance Tracker</title>
+    <style>
+        /* body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .file-upload-container {
+            margin-bottom: 20px;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .file-upload-label:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #file1-label,#file2-label{
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+        #delay-container {
+            margin-bottom: 20px;
+        }
+
+        #delay-label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        #delay {
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .file-name-title{
+            text-align: start;
+            font-weight: bold;
+        }
+        .popup {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1000; 
+}
+
+.popup-content {
+    background-color: #fff;
+    width: 80%;
+    max-width: 600px;
+    margin: 100px auto; 
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+} */
+        .fa {
+            margin-right: 5px;
+        }
+
+        .card {
+            align-items: center;
+        }
+
+        .card-header {
+            width: 100%;
+            text-align: center;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        .upload-button {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        #reset-button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar sticky-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">GTS Attendance Tracker</a>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h5 class="card-header bg-dark text-white"><i class="fa fa-exchange" aria-hidden="true"></i> Convert Teams
+                Attendance into Attendance Report</h5>
+            <div class="card-body">
+                <form action="/vlookup" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                </form>
+                <h5 class="card-title"><label for="file1"><i class="fa fa-files-o" aria-hidden="true"></i></label> Teams Attendance File</h5>
+                <p class="card-text">
+                    <div class="custom-file">
+                        <input type="file" class="form-control-file" id="file1" type="file" name="files1"
+                        accept=".xlsx, .xls, .csv" multiple onchange="updateFileName('file1', 'file1-label')">
+                        <label class="custom-file-label" for="file1">Choose file</label>
+                      </div>
+                <!-- <div class="form-group">
+                    <input type="file" class="form-control-file" id="file1" type="file" name="files1"
+                        accept=".xlsx, .xls, .csv" multiple onchange="updateFileName('file1', 'file1-label')">
+                </div> -->
+                </p>
+                <h5 class="card-title"><label for="file2"><i class="fa fa-file-excel-o" aria-hidden="true"></i></label> Training Nomination List
+                </h5>
+                <p class="card-text">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="file2" type="file" name="files2"
+                        accept=".xlsx, .xls, .csv" multiple onchange="updateFileName('file2', 'file2-label')">
+                        <label class="custom-file-label" for="file2">Choose file</label>
+                      </div>
+                <!-- <div class="form-group">
+                    <input type="file" class="form-control-file" id="file2" type="file" name="files2"
+                        accept=".xlsx, .xls, .csv" multiple onchange="updateFileName('file2', 'file2-label')">
+                </div> -->
+                </p>
+                <h5 class="card-title"><i class="fa fa-clock-o" aria-hidden="true"></i> Mininum In Meeting Duration (in
+                    minutes)</h5>
+                <p class="card-text">
+                <!-- <input type="number" id="delay" name="delay" min="0" step="5" value="0"> -->
+                <select class="custom-select" required>
+                    <option value="0">0</option>
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                  </select>
+                </p>
+                <div class="upload-button">
+                    <button id="reset-button" type="submit" class="btn btn-danger"><i class="fa fa-repeat"
+                            aria-hidden="true"></i> Reset</button>
+                    <button id="upload-button" type="submit" class="btn btn-primary" disabled><i
+                            class="fa fa-cloud-upload" aria-hidden="true"></i> Upload</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+      <!-- <form action="/vlookup" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <div class="file-upload-container">
+            <h4 class="file-name-title">Teams Attendance File</h4>
+                <div class="form-group">
+                  <label for="file1">Teams Attendance Files</label>
+                  <input type="file" class="form-control-file" id="file1" type="file" name="files1" accept=".xlsx, .xls, .csv" multiple onchange="updateFileName('file1', 'file1-label')">
+                </div>
+         
+        </div>
+        <div class="file-upload-container">
+            <h4 class="file-name-title">Training Nomination List</h4>
+            <label class="file-upload-label">
+                Choose Another File
+                <input id="file2" type="file" name="files2" accept=".xlsx, .xls, .csv" multiple onchange="updateFileName('file2', 'file2-label')">
+            </label>
+            <div id="file2-label" class="file-upload-label">No file chosen</div>
+        </div>
+        <div>
+            <label for="delay">Mininum In Meeting Duration (in minutes):</label>
+            <input type="number" id="delay" name="delay" min="0" step="5" value="0">
+        </div>
+        <button onclick="openPopup()">Open Popup</button>
+
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h2>Table format</h2>
+        <table id="nonEditableTable">
+         
+        </table>
+    </div>
+</div>
+        <button id="upload-button" type="submit" disabled>Upload</button>
+    </form> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <!-- <script src="/public/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script>
+        function updateFileName(inputId, labelId) {
+            const input = document.getElementById(inputId);
+            const label = document.getElementById(labelId);
+            const files = input.files;
+
+            if (files.length > 0) {
+                let fileNameList = '';
+                for (let i = 0; i < files.length; i++) {
+                    fileNameList += files[i].name;
+                    if (i < files.length - 1) {
+                        fileNameList += ', ';
+                    }
+                }
+                label.textContent = fileNameList;
+            } else {
+                label.textContent = 'No file chosen';
+            }
+            validateForm();
+        }
+
+        function validateForm() {
+            const file1 = document.getElementById('file1').files;
+            const file2 = document.getElementById('file2').files;
+            const uploadButton = document.getElementById('upload-button');
+            if (file1.length > 0 && file2.length > 0) {
+                uploadButton.disabled = false;
+                return true;
+            } else {
+                uploadButton.disabled = true;
+                return false;
+            }
+        }
+        function openPopup() {
+            document.getElementById('popup').style.display = 'block';
+            populateTable(); // Call function to populate the table
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function populateTable() {
+            const tableData = [
+                ['NEW_EMP_ID', 'NAME'],
+            ];
+            const table = document.getElementById('nonEditableTable');
+            // Clear existing table content
+            table.innerHTML = '';
+            // Populate the table with data
+            tableData.forEach(rowData => {
+                const row = document.createElement('tr');
+                rowData.forEach(cellData => {
+                    const cell = document.createElement('td');
+                    cell.textContent = cellData;
+                    row.appendChild(cell);
+                });
+                table.appendChild(row);
+            });
+        }
+    </script>
+</body>
+
+</html>
