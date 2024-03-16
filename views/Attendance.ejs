@@ -53,7 +53,7 @@
             background-color: #f9f9f9;
         }
 
-        button {
+        /* button {
             display: flex;
             padding: 10px 20px;
             margin: 10px;
@@ -69,7 +69,7 @@
 
         button:hover {
             background-color: #45a049;
-        }
+        } */
         .header-tracker{
             display: flex;
             align-items: center;
@@ -125,7 +125,23 @@
     flex: 1;
     text-align: center;
 }
-
+.summary-tracker{
+    display: flex;
+    align-items: flex-start;
+    margin: 0px 20px;
+    gap: 20px;
+}
+.summary-tracker h2{
+    flex: 1;
+}
+.summary-tracker .accordion{
+    flex: 3;
+}
+.download-tracker{
+    display: flex;
+    margin: 10px 20px;
+    justify-content: flex-end;
+}
 
     </style>
 </head>
@@ -133,31 +149,55 @@
     <nav class="navbar sticky-top navbar-dark bg-dark">
         <a class="navbar-brand" href="#">GTS Attendance Tracker</a>
     </nav>
+    <div class="header-report-wrap">
     <div class="header-tracker">
         <h2><span class="badge bg-secondary">Training Name: <%= trainingName %></span></h2>
         <h2><span class="badge bg-secondary">Participants Count : <span id="count-employee"></span></h2>
     </div>
-    
+    <div class="summary-tracker">
+        <h2><span class="badge bg-secondary">Trainer: Trainer Name</span></h2>
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Training Datewise Summary
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <table class="table summary-table">
+                        <thead class="table-dark">
+                            <tr>
+                          <th>Date</th>
+                          <th>Present</th>
+                          <th>Absent</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <% for (let i = 0; i < dates.length; i++) { %>
+                                <% 
+                                const date = new Date(dates[i].date);
+                                const formattedDate = formatDate(date);
+                            %>
+                            <tr>
+                            <td><%= formattedDate %></td>
+                            <td id="count-presence<%= i %>"></td>
+                            <td id="count-absent<%= i %>"></td>
+                        </tr>
+                            <% } %>
+                        </tbody>
+                      </table>
+                </div>
+              </div>
+            </div>
+        </div> 
+            
+    </div>
+</div>
 
     
-    <% for (let i = 0; i < dates.length; i++) { %>
-        <% 
-        const date = new Date(dates[i].date);
-        const formattedDate = formatDate(date);
-    %>
-        <div class="date-summary-container">
-            <label class="summary-header"><%= formattedDate %></label>
-            <div class="summary-box">
-                <p class="summary-label">Present:</p>
-                <p id="count-presence<%= i %>" class="summary-value"></p>
-                <p class="summary-label absent-value">Absent:</p>
-                <p id="count-absent<%= i %>" class="summary-value"></p>
-            </div>
-        </div>
-    <% } %>
-    
-    <div class="header-tracker">
-        <button id="export-btn">Export to Excel</button>
+    <div class="download-tracker">
+        <button id="export-btn" class="btn btn-primary">Export to Excel</button>
     </div>
     
     <table>
