@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const moment = require('moment');
 const { readExcel, extractDataFromNomination , extractFromTeamsAttendance } = require('./utils/excel')
 const app = express();
-const port = 3000;
+const port = 3001;
 app.use(express.static(path.join(__dirname, "public")));
 // // Serve static files from the 'node_modules' directory
 // app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
@@ -33,7 +33,6 @@ app.post(
     const files1 = req.files["files1"];
     const files2 = req.files["files2"];
     const delay = req.body.delay;
-
     // Ensure both files are uploaded
     if (!files1 || !files2) {
       return res.status(400).send("Please upload both files.");
