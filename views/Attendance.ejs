@@ -124,6 +124,9 @@
     margin: 10px 20px;
     justify-content: flex-end;
 }
+#tmu-btn{
+    margin-right: 10px;
+}
 .navbar-brand{
             margin-left: 20px;
         }
@@ -141,7 +144,7 @@
     </div>
     <div class="summary-tracker">
         <h2><span class="badge bg-secondary">Trainer: Trainer Name</span></h2>
-        <div class="accordion" id="accordionExample">
+        <d iv class="accordion" id="accordionExample">
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -179,9 +182,11 @@
             
     </div>
 </div>
-
-    
+    <!-- <div class="tmu-tracker">
+        
+    </div> -->
     <div class="download-tracker">
+        <button id="tmu-btn" class="btn btn-primary">Export TMU</button>
         <button id="export-btn" class="btn btn-primary">Export to Excel</button>
     </div>
     
@@ -302,7 +307,9 @@
                 console.error('Error exporting data:', error);
                 alert('An error occurred. Please try again later.');
             });
-        });
+            window.history.pushState(null,null,'http://localhost:3001/vlookup')
+        }
+        );
     </script>
 </body>
 </html>

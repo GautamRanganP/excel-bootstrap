@@ -18,7 +18,7 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
 
-app.get("/", (req, res) => {
+app.get("/home", (req, res) => {
   res.render("index");
 });
 

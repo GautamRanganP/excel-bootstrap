@@ -14,10 +14,6 @@
             margin-right: 5px;
         }
 
-        .card {
-            align-items: center;
-        }
-
         .card-header {
             width: 100%;
             text-align: center;
@@ -39,6 +35,34 @@
         .navbar-brand{
             margin-left: 20px;
         }
+        .card-body{
+            display: flex;
+        }
+        .card-body form {
+            padding: 20px;
+            flex: 1;
+        }
+        .form-date-details{
+            flex: 1;
+        }
+        #teams-date{
+            padding-left: 0px;
+            display: flex;
+            list-style: none;
+        }
+        #teams-date li{
+            margin: 0px 10px;
+            padding: 8px;
+            border-radius: 20px;
+            background-color: rgb(4, 92, 172);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        #teams-date li:first-child{
+            margin-left: 0px;
+        }
+
     </style>
 </head>
 
@@ -51,11 +75,16 @@
         <div class="card">
             <h5 class="card-header bg-dark text-white"><i class="fa fa-exchange" aria-hidden="true"></i> Convert Teams Attendance into Attendance Report</h5>
             <div class="card-body">
-                <form action="/vlookup" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <form action="/vlookup" id='gts-form' method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <h5 class="card-title"><label for="file1"><i class="fa fa-files-o" aria-hidden="true"></i></label> Teams Attendance File</h5>
                     <p class="card-text">
                         <!-- <label for="formFileMultiple" class="form-label">Multiple files input example</label> -->
                         <input class="form-control" name="files1" type="file" id="formFileMultiple" multiple onchange="updateFileName('formFileMultiple', 'file1-label')">   
+                        <div class="form-date-details">
+                            <ul id="teams-date">
+        
+                            </ul>
+                        </div>
                 </p>
                 <h5 class="card-title"><label for="file2"><i class="fa fa-file-excel-o" aria-hidden="true"></i></label> Training Nomination List
                 </h5>
@@ -75,74 +104,66 @@
                   </select>
                 </p>
                 <div class="upload-button">
-                    <button id="reset-button" type="submit" class="btn btn-danger"><i class="fa fa-repeat" aria-hidden="true"></i> Reset</button>
+                    <button id="reset-button" class="btn btn-danger" onclick="resetForm()"><i class="fa fa-repeat" aria-hidden="true"></i> Reset</button>
                     <button id="upload-button" type="submit" class="btn btn-primary" disabled><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload</button>
                 </div>
                 </form>
             </div>
         </div>
     </div>
-
     
-      <!-- <form action="/vlookup" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-        <div class="file-upload-container">
-            <h4 class="file-name-title">Teams Attendance File</h4>
-                <div class="form-group">
-                  <label for="file1">Teams Attendance Files</label>
-                  <input type="file" class="form-control-file" id="file1" type="file" name="files1" accept=".xlsx, .xls, .csv" multiple onchange="updateFileName('file1', 'file1-label')">
-                </div>
-         
-        </div>
-        <div class="file-upload-container">
-            <h4 class="file-name-title">Training Nomination List</h4>
-            <label class="file-upload-label">
-                Choose Another File
-                <input id="file2" type="file" name="files2" accept=".xlsx, .xls, .csv" multiple onchange="updateFileName('file2', 'file2-label')">
-            </label>
-            <div id="file2-label" class="file-upload-label">No file chosen</div>
-        </div>
-        <div>
-            <label for="delay">Mininum In Meeting Duration (in minutes):</label>
-            <input type="number" id="delay" name="delay" min="0" step="5" value="0">
-        </div>
-        <button onclick="openPopup()">Open Popup</button>
-
-<div id="popup" class="popup">
-    <div class="popup-content">
-        <span class="close" onclick="closePopup()">&times;</span>
-        <h2>Table format</h2>
-        <table id="nonEditableTable">
-         
-        </table>
-    </div>
-</div>
-        <button id="upload-button" type="submit" disabled>Upload</button>
-    </form> -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script>
+        function resetForm(){
+            document.getElementById('gts-form').reset()
+            document.getElementById('teams-date').innerHTML = ''
+        }
+        window.onpopstate((event)=>{
+            console.log("back")
+            validateForm()
+        })
         function updateFileName(inputId, labelId) {
+            if(labelId !== 'file2-label'){
             const input = document.getElementById(inputId);
+            const listOfDates = document.getElementById('teams-date');
           //  const label = document.getElementById(labelId);
             const files = input.files;
 
             if (files.length > 0) {
                 let fileNameList = '';
                 for (let i = 0; i < files.length; i++) {
-                    fileNameList += files[i].name;
+                    let extractedDate;
+                    const regex = /(\d{1,2}-\d{1,2}-\d{1,2})/; // Extracting the date from the filename using the regular expression
+                    const match = files[i].name.match(regex); 
+                    if (match && match.length > 0) {     
+                        extractedDate = match[0];     
+                        fileNameList += extractedDate;
+                        console.log("Extracted date:", extractedDate); 
+                    } else {     
+                        fileNameList += files[i].name;
+                        console.log("Date not found in filename."); 
+                    }
                     if (i < files.length - 1) {
                         fileNameList += ', ';
                     }
                 }
+                const fileNameArray = fileNameList.split(', ');
+                fileNameArray.map((dateValue)=>{
+                    const li = document.createElement('li');
+                    li.textContent = dateValue;
+                    listOfDates.appendChild(li)
+                })
+                console.log("Filename",fileNameList)
         //        label.textContent = fileNameList;
             } else {
           //      label.textContent = 'No file chosen';
             }
+        }
             validateForm();
         }
 
         function validateForm() {
-            console.log("called")
             const file1 = document.getElementById('formFileMultiple').files;
             const file2 = document.getElementById('formFile').files;
             const uploadButton = document.getElementById('upload-button');
@@ -182,6 +203,7 @@
             });
         }
         document.addEventListener('DOMContentLoaded',()=>{
+            window.history.pushState(null,null,'http://localhost:3001/home')
             validateForm()
         })
     </script>
