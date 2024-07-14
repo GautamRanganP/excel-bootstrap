@@ -10,6 +10,7 @@ function readExcel(buffer){
 
 function extractDataFromNomination(dataArray ,sessionCount) {
     const participants = [];
+    console.log("dataarray",dataArray)
     for (const item of dataArray) {
       const participant = {
         NEW_EMP_ID: item.NEW_EMP_ID,

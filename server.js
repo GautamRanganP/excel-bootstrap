@@ -10,8 +10,8 @@ const port = 3001;
 app.use(express.static(path.join(__dirname, "public")));
 // // Serve static files from the 'node_modules' directory
 // app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
-
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' })); 
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 const storage = multer.memoryStorage()
@@ -109,7 +109,7 @@ app.post(
         });
     });
     
-      // console.log("Employee",employees)
+      console.log("Employee",employees)
     
       res.render("Attendance", { employees ,trainingName:TrainingDetails.Name ,dates: TrainingDetails.DateList });
     } catch (err) {

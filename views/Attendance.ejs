@@ -243,6 +243,7 @@
             let employee = document.querySelectorAll('.employee-name')
             let employeeElement = document.getElementById('count-employee')
             let datesData = JSON.parse(`<%-JSON.stringify(dates)%>`) 
+            // console.log("employeedata",datesData)
             employeeElement.innerText = employee.length
             let datesCount = [];
             for (let i = 0; i < datesData.length; i++) {
@@ -273,6 +274,7 @@
         })
         document.getElementById('export-btn').addEventListener('click', function() {
             let data = JSON.parse('<%-JSON.stringify(employees)%>') 
+            console.log("employeedata",data)
             let datesData = JSON.parse('<%-JSON.stringify(dates)%>') 
             let trainingName = JSON.parse(`<%-JSON.stringify(trainingName)%>`) 
             fetch('/export-excel', {
